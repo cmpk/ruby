@@ -1,10 +1,12 @@
 require 'csv'
-require './data_record'
+require_relative './data_record'
 
 class DataRecords
-  def read(filepath)
+  def read(filepath, include_header=true)
     @data_records = []
-    CSV.foreach(filepath, skip_blanks: true) do |csv_row|
+    csv_contents = CSV.read(filepath, skip_blanks: true)
+    csv_contents.shift if include_header
+    csv_contents.each do |csv_row|
       @data_records << DataRecord.new(
         column_size: csv_row.length,
         date: csv_row[0]&.strip,
